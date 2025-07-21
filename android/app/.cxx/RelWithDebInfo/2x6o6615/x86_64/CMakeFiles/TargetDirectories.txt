@@ -1,0 +1,2 @@
+/home/neo/disk/.FlutterProjects/ashur/ashur/android/app/.cxx/RelWithDebInfo/2x6o6615/x86_64/CMakeFiles/edit_cache.dir
+/home/neo/disk/.FlutterProjects/ashur/ashur/android/app/.cxx/RelWithDebInfo/2x6o6615/x86_64/CMakeFiles/rebuild_cache.dir

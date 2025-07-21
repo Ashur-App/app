@@ -1,0 +1,4 @@
+
+s:
+    camel_case_types: ignore
+include: package:flutter_lints/flutter.yaml

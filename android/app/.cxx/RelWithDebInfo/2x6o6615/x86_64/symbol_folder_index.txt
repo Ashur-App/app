@@ -1,0 +1,1 @@
+/home/neo/disk/.FlutterProjects/ashur/ashur/build/app/intermediates/cxx/RelWithDebInfo/2x6o6615/obj/x86_64

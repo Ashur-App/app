@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="تجربه تطبيق اشور بدون تحميل">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="ashur">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>اشور</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Web-specific optimizations for story viewing -->
+  <style>
+    /* Prevent text selection during story navigation */
+    body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Optimize for full-screen story viewing */
+    .story-view {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    /* Disable scrolling during story viewing */
+    .no-scroll {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <style>  
+    #loader-content {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .progress-bar {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid aqua;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-top: 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    body {
+      background-color: darkslategray;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+    }
+  </style>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      document.getElementById('loader-content').style.display = 'none';
+    });
+    
+    // Web-specific optimizations for story viewing
+    document.addEventListener('DOMContentLoaded', function() {
+      // Prevent context menu on right-click for better story experience
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+      
+      // Add keyboard shortcuts for story navigation
+      document.addEventListener('keydown', function(e) {
+        // Prevent default behavior for arrow keys and escape
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Escape') {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+  <div class="main-content" id="loader-content">
+    <img src="ashur.png" alt="Ashur" />
+    <div class="progress-bar"></div>                   
+  </div> 
+</body>
+</html>

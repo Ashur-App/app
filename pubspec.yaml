@@ -1,0 +1,94 @@
+name: ashur
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 2.0.0+3
+
+environment:
+  sdk: ">=3.4.0-0 <4.0.0"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  firebase_core: ^3.15.1
+  image_picker: ^1.1.1
+  firebase_auth: ^5.6.2
+  flutter_spinkit: ^5.1.0
+  google_fonts:
+  video_player: ^2.8.6
+  scroll_snap_list: ^0.9.1
+  firebase_crashlytics: ^4.0.1
+  firebase_analytics: ^11.0.1
+  cross_file: ^0.3.4+1
+  flutter_sound: ^9.4.11
+  path_provider: ^2.1.2
+  permission_handler: ^11.3.1
+  path: ^1.9.0
+  image_editor_plus: ^1.0.6
+  material: ^1.0.0+2
+  screenshot: ^3.0.0
+  share_plus: ^11.0.0
+  flutter_sound_web: ^9.4.11
+  permission_handler_html: ^0.1.1
+  dynamic_color: ^1.7.0
+  flutter_launcher_icons: ^0.14.4
+  firebase_database: ^11.3.9
+  smart_text_flutter: ^0.3.1
+  uuid: ^4.4.2
+  shared_preferences: ^2.2.3
+  http: ^1.2.2
+  intl: ^0.20.2
+  flutter_markdown: ^0.7.3
+  markdown: ^7.2.2
+  flutter_html: ^3.0.0
+  url_launcher: ^6.3.0
+  html: ^0.15.4
+  audioplayers: ^6.0.0
+  msix: ^3.16.8
+  firebase_core_web: ^2.24.1
+  flutter_inappwebview: ^6.1.5
+  fwfh_webview: ^0.15.2
+  flutter_widget_from_html_core: ^0.17.0
+  dio: ^5.7.0
+  file_saver: ^0.3.1
+  encrypt: ^5.0.3
+  flutter_colorpicker: ^1.1.0
+  fl_chart: ^1.0.0
+  flutter_local_notifications: ^19.3.1
+  emoji_picker_flutter: ^4.3.0
+  package_info_plus: ^8.3.0
+  crypto: ^3.0.6
+  firebase_messaging: ^15.2.9
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+# dependency_overrides:
+#   firebase_core_platform_interface: ^5.2.0
+#   firebase_core_desktop: ^1.0.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - images/
+    - images/4x/
+    - images/games/
+  fonts:
+    - family: 3rby
+      fonts:
+        - asset: fonts/LamaSans-Medium.ttf
+    - family: title
+      fonts:
+        - asset: fonts/BADABB__.TTF
+    - family: star
+      fonts:
+        - asset: fonts/Superstar M54.ttf
+flutter_launcher_icons:
+  image_path_android: "images/icon.png"
+  image_path_ios: "images/icon.png"
+  android: true
+  ios: true
