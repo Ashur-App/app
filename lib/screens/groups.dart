@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'groupchat.dart';
 
 class GroupListScreen extends StatefulWidget {
-  GroupListScreen({super.key});
+  const GroupListScreen({super.key});
 
   @override
   _GroupListScreenState createState() => _GroupListScreenState();
