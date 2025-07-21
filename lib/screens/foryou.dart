@@ -1518,15 +1518,9 @@ class _foryouscreenState extends State<foryouscreen>
 
         List<Widget> chatWidgets = [];
         chats.forEach((key, value) {
-          if (key != 'followers' &&
-              key != 'username' &&
-              key != 'id' &&
-              key != 'pic' &&
-              key != 'bio' &&
-              key != 'email' &&
-              key != 'name' &&
-              key != 'verify') {
-            String otherUserUID = key;
+          if (key.contains(currentUserUID)) {
+            String otherUserUID = key.replaceAll('-', '').replaceAll(currentUserUID, '');
+            if (otherUserUID.isEmpty) return; // Skip self-DM (saved messages)
             chatWidgets.add(
               FutureBuilder<DatabaseEvent>(
                 future: FirebaseDatabase.instance.ref('users/$otherUserUID').once(),
@@ -3135,11 +3129,11 @@ print('[DEBUG] Parsed profileTheme color for @${userSnapshot.data?['username']}:
         }
 
         Map<String, dynamic> chats = Map<String, dynamic>.from(snapshot.data!.snapshot.value as Map);
-
         List<Map<String, dynamic>> chatList = [];
         chats.forEach((key, value) {
           if (key.contains(currentUserUID)) {
             String otherUserUID = key.replaceAll('-', '').replaceAll(currentUserUID, '');
+            if (otherUserUID.isEmpty) return;
             chatList.add({
               'key': key,
               'otherUserUID': otherUserUID,
