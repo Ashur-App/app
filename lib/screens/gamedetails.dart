@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class GameDetails extends StatefulWidget {
   final dynamic games_data;
-  GameDetails({super.key, required this.games_data});
+  const GameDetails({super.key, required this.games_data});
 
   @override
   State<GameDetails> createState() => _gameDetailsState();

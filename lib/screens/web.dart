@@ -6,14 +6,14 @@ import 'package:fwfh_webview/fwfh_webview.dart';
 
 class WebGame extends StatefulWidget {
   final String gameUrl;
-  WebGame({super.key, required this.gameUrl});
+  const WebGame({super.key, required this.gameUrl});
 
   @override
   State<WebGame> createState() => _WebGameState();
 }
 
 class _WebGameState extends State<WebGame> {
-  bool _isLoading = true;
+  final bool _isLoading = true;
   bool _hasError = false;
   String _errorMessage = '';
 
@@ -23,7 +23,7 @@ class _WebGameState extends State<WebGame> {
     
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      body: Container(
+      body: SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: (defaultTargetPlatform == TargetPlatform.android ||

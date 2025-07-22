@@ -48,7 +48,7 @@ class UserBadges extends StatelessWidget {
       if (achievements.isNotEmpty) {
         badges.add(
           Tooltip(
-            message: 'الإنجازات: ' + achievements.join(', '),
+            message: 'الإنجازات: ${achievements.join(', ')}',
             child: Stack(
               alignment: Alignment.topRight,
               children: [

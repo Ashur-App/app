@@ -53,10 +53,7 @@ class _StreaksStoreState extends State<StreaksStore> with SingleTickerProviderSt
   final TextEditingController _promoController = TextEditingController();
   bool _redeemingPromo = false;
   Map<String, dynamic>? _userData;
-  Map<String, dynamic> _dailyChallenge = {};
-  Map<String, dynamic> _weeklyChallenge = {};
-  bool _dailyClaimed = false;
-  bool _weeklyClaimed = false;
+
 
   Future<void> _loadNow() async {
     _now = DateTime.now();
@@ -98,40 +95,15 @@ class _StreaksStoreState extends State<StreaksStore> with SingleTickerProviderSt
   }
 
   Future<void> _loadChallenges() async {
-    final ref = FirebaseDatabase.instance.ref('challenges');
-    final snap = await ref.get();
-    if (snap.exists && snap.value != null) {
-      final data = Map<String, dynamic>.from(snap.value as Map);
-      setState(() {
-        _dailyChallenge = data['daily'] is Map ? Map<String, dynamic>.from(data['daily'] as Map) : {};
-        _weeklyChallenge = data['weekly'] is Map ? Map<String, dynamic>.from(data['weekly'] as Map) : {};
-      });
-    }
-    if (_uid != null) {
-      final userRef = FirebaseDatabase.instance.ref('users/$_uid');
-      final userSnap = await userRef.get();
-      if (userSnap.exists && userSnap.value != null) {
-        final userData = Map<String, dynamic>.from(userSnap.value as Map);
-        setState(() {
-          _dailyClaimed = userData['dailyChallengeCompleted'] == true;
-          _weeklyClaimed = userData['weeklyChallengeCompleted'] == true;
-        });
-      }
-    }
+    setState(() {
+      // No specific loading needed here — handled by FutureBuilder in UI
+    });
   }
 
   Future<void> _claimChallenge(String type) async {
     if (_uid == null) return;
     final userRef = FirebaseDatabase.instance.ref('users/$_uid');
-    if (type == 'daily' && !_dailyClaimed) {
-      final reward = (_dailyChallenge['reward'] ?? 10);
-      await userRef.update({'dailyChallengeCompleted': true, 'streaks': _streaks + (reward is int ? reward : (reward as num).toInt())});
-      setState(() { _dailyClaimed = true; _streaks += (reward is int ? reward : (reward as num).toInt()); });
-    } else if (type == 'weekly' && !_weeklyClaimed) {
-      final reward = (_weeklyChallenge['reward'] ?? 50);
-      await userRef.update({'weeklyChallengeCompleted': true, 'streaks': _streaks + (reward is int ? reward : (reward as num).toInt())});
-      setState(() { _weeklyClaimed = true; _streaks += (reward is int ? reward : (reward as num).toInt()); });
-    }
+        // Removed — all claiming now done directly in FutureBuilder + challenges tab UI
   }
 
   @override
