@@ -47,59 +47,6 @@ class foryouscreen extends StatefulWidget {
   State<foryouscreen> createState() => _foryouscreenState();
 }
 
-// Update dialog widget
-class UpdateAvailableDialog extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return AlertDialog(
-      title: Text(
-        'يوجد تحديث جديد',
-        style: TextStyle(color: colorScheme.onSurface),
-      ),
-      content: Text(
-        'توجد تحديث جديد متاح. اضغط على الزر أدناه لتحديث التطبيق.',
-        style: TextStyle(color: colorScheme.onSurface),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(); // Dismiss dialog first
-          },
-          child: Text(
-            'لاحقاً',
-            style: TextStyle(color: colorScheme.onSurfaceVariant),
-          ),
-        ),
-        TextButton(
-          onPressed: () async {
-            final url = 'https://github.com/$repo/releases/latest';
-            await launchUrl(Uri.parse(url));
-          },
-          child: Text(
-            'تحديث الآن',
-            style: TextStyle(color: colorScheme.primary),
-          ),
-        )
-      ],
-      backgroundColor: colorScheme.surface,
-      titleTextStyle: TextStyle(
-        color: colorScheme.onSurface,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-      contentTextStyle: TextStyle(
-        color: colorScheme.onSurface,
-        fontSize: 16,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      actionsAlignment: MainAxisAlignment.spaceBetween,
-    );
-  }
-}
-
 class _foryouscreenState extends State<foryouscreen>
     with TickerProviderStateMixin {
   
