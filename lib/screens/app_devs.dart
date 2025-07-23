@@ -22,7 +22,7 @@ class AppDevsScreen extends StatelessWidget {
           backgroundColor: colorScheme.surface,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: colorScheme.primary),
+            icon: Icon(Icons.arrow_back, color: colorScheme.primary),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
