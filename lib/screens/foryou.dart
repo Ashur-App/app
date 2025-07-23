@@ -1,7 +1,6 @@
 import 'package:ashur/screens/aichat.dart';
 import 'package:ashur/screens/groupchat.dart';
 import 'package:ashur/secrets.dart';
-import 'package:ashur/update.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -317,14 +316,10 @@ class _foryouscreenState extends State<foryouscreen>
   @override
   void initState() {
     super.initState();
-    
-    // Initialize TabControllers
     _tabController = TabController(length: 6, vsync: this);
     _tabController2 = TabController(length: 6, vsync: this);
     _chatTabController = TabController(length: 2, vsync: this);
     _mainFeedTabController = TabController(length: 3, vsync: this);
-    
-    // Initialize AnimationControllers with safety checks
     try {
       _animationController = AnimationController(
         duration: const Duration(milliseconds: 600),
@@ -346,47 +341,18 @@ class _foryouscreenState extends State<foryouscreen>
         }
       });
       
-      // Start the pulse animation only once
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           _pulseController.forward();
         }
       });
     } catch (e) {
-      // If animation initialization fails, don't prevent widget from showing
       print('Error initializing animations: $e');
     }
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
     _getUserUID();
-    
-    // We need to use addPostFrameCallback to show dialog after initial build
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (firstBuild) {
-        firstBuild = false;
-        
-        try {
-          final updateAvailable = await checkForUpdate();
-          
-          if (updateAvailable) {
-            // Show dismissible update dialog in Arabic
-            await Future.delayed(Duration(seconds: 2)); // Delay for smooth app load
-            
-            if (context.mounted) {
-              await showDialog(
-                context: context,
-                barrierDismissible: true, // Allows dismissing by tapping outside
-                builder: (context) => UpdateAvailableDialog(),
-              );
-            }
-          }
-        } catch (e) {
-          // Handle error silently to not interrupt user experience
-          print('Update check failed: $e');
-        }
-      }
-    });
     _getCurrentUsername();
     _reelsPageController = PageController();
     _loadPosts();
