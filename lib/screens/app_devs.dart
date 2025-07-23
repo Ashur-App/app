@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:ashur/secrets.dart';
 class AppDevsScreen extends StatelessWidget {
   const AppDevsScreen({super.key});
 
@@ -7,12 +7,12 @@ class AppDevsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final devs = [
-      {'name': 'NEOAPPS', 'role': 'المبرمج', 'avatar': 'images/ashur.png'},
-      {'name': 'باقر', 'role': 'المالك', 'avatar': 'images/ashur.png'},
-      {'name': 'مصطفى حيدر', 'role': 'تسويق', 'avatar': 'images/ashur.png'},
-      {'name': 'DARK', 'role': 'تجربه', 'avatar': 'images/ashur.png'},
-      {'name': 'علي', 'role': 'مطور', 'avatar': 'images/ashur.png'},
-      {'name': 'سجاد عماد', 'role': 'تسويق وتجربه', 'avatar': 'images/ashur.png'},
+      {'name': 'NEOAPPS', 'role': 'المبرمج', 'avatar': 'https://github.com/neoapps-dev.png'},
+      {'name': 'باقر', 'role': 'المالك', 'avatar': '$ashurStorageUrl/api/storage?fileId=AgACAgIAAyEGAASjkFvNAANTaHY7R3rR1qK1mA_CdCUexe8mpDQAAl3zMRsId7FLmc4CX9V931QBAAMCAAN5AAM2BA'},
+      {'name': 'مصطفى حيدر', 'role': 'تسويق', 'avatar': 'https://raw.githubusercontent.com/$repo/refs/heads/master/images/ashur.png'},
+      {'name': 'DARK', 'role': 'تجربه', 'avatar': 'https://raw.githubusercontent.com/$repo/refs/heads/master/images/ashur.png'},
+      {'name': 'علي', 'role': 'مطور', 'avatar': 'https://raw.githubusercontent.com/$repo/refs/heads/master/images/ashur.png'},
+      {'name': 'سجاد عماد', 'role': 'تسويق وتجربه', 'avatar': 'https://raw.githubusercontent.com/$repo/refs/heads/master/images/ashur.png'},
     ];
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -49,7 +49,7 @@ class AppDevsScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             CircleAvatar(
-                              backgroundImage: AssetImage(dev['avatar']!),
+                              backgroundImage: NetworkImage(dev['avatar']!),
                               radius: 28,
                               backgroundColor: colorScheme.primary.withOpacity(0.1),
                             ),
