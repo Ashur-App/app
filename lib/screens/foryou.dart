@@ -1,6 +1,9 @@
 import 'package:ashur/screens/aichat.dart';
 import 'package:ashur/screens/groupchat.dart';
+import 'package:ashur/secrets.dart';
+import 'package:ashur/update.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:share_plus/share_plus.dart';
@@ -45,8 +48,63 @@ class foryouscreen extends StatefulWidget {
   State<foryouscreen> createState() => _foryouscreenState();
 }
 
+// Update dialog widget
+class UpdateAvailableDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return AlertDialog(
+      title: Text(
+        'يوجد تحديث جديد',
+        style: TextStyle(color: colorScheme.onSurface),
+      ),
+      content: Text(
+        'توجد تحديث جديد متاح. اضغط على الزر أدناه لتحديث التطبيق.',
+        style: TextStyle(color: colorScheme.onSurface),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Dismiss dialog first
+          },
+          child: Text(
+            'لاحقاً',
+            style: TextStyle(color: colorScheme.onSurfaceVariant),
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            final url = 'https://github.com/$repo/releases/latest';
+            await launchUrl(Uri.parse(url));
+          },
+          child: Text(
+            'تحديث الآن',
+            style: TextStyle(color: colorScheme.primary),
+          ),
+        )
+      ],
+      backgroundColor: colorScheme.surface,
+      titleTextStyle: TextStyle(
+        color: colorScheme.onSurface,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      contentTextStyle: TextStyle(
+        color: colorScheme.onSurface,
+        fontSize: 16,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
+    );
+  }
+}
+
 class _foryouscreenState extends State<foryouscreen>
     with TickerProviderStateMixin {
+  
+  bool firstBuild = true;
   late TabController _tabController;
   late TabController _tabController2;
   late TabController _chatTabController;
@@ -259,22 +317,76 @@ class _foryouscreenState extends State<foryouscreen>
   @override
   void initState() {
     super.initState();
+    
+    // Initialize TabControllers
     _tabController = TabController(length: 6, vsync: this);
     _tabController2 = TabController(length: 6, vsync: this);
     _chatTabController = TabController(length: 2, vsync: this);
     _mainFeedTabController = TabController(length: 3, vsync: this);
-    _animationController = AnimationController(
-      duration: Duration(milliseconds: 600),
-      vsync: this,
-    );
-    _pulseController = AnimationController(
-      duration: Duration(milliseconds: 1500),
-      vsync: this,
-    );
+    
+    // Initialize AnimationControllers with safety checks
+    try {
+      _animationController = AnimationController(
+        duration: const Duration(milliseconds: 600),
+        vsync: this,
+      );
+      
+      _pulseController = AnimationController(
+        duration: const Duration(milliseconds: 1500),
+        vsync: this,
+      );
+      
+      _pulseAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+        CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+      )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _pulseController.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          _pulseController.forward();
+        }
+      });
+      
+      // Start the pulse animation only once
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _pulseController.forward();
+        }
+      });
+    } catch (e) {
+      // If animation initialization fails, don't prevent widget from showing
+      print('Error initializing animations: $e');
+    }
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
     _getUserUID();
+    
+    // We need to use addPostFrameCallback to show dialog after initial build
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (firstBuild) {
+        firstBuild = false;
+        
+        try {
+          final updateAvailable = await checkForUpdate();
+          
+          if (updateAvailable) {
+            // Show dismissible update dialog in Arabic
+            await Future.delayed(Duration(seconds: 2)); // Delay for smooth app load
+            
+            if (context.mounted) {
+              await showDialog(
+                context: context,
+                barrierDismissible: true, // Allows dismissing by tapping outside
+                builder: (context) => UpdateAvailableDialog(),
+              );
+            }
+          }
+        } catch (e) {
+          // Handle error silently to not interrupt user experience
+          print('Update check failed: $e');
+        }
+      }
+    });
     _getCurrentUsername();
     _reelsPageController = PageController();
     _loadPosts();

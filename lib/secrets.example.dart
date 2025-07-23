@@ -5,3 +5,4 @@ const String ashurBotApiUrl = 'https://your-api-url-here';
 const String ashurGamesUrl = 'https://your-api-url-here';
 const String ashurStorageUrl = 'https://your-api-url-here';
 const String ashurStorageApiKey = 'your-api-key-here';
+const String repo = 'username/repo';
