@@ -1,8 +1,6 @@
 import 'package:ashur/screens/aichat.dart';
 import 'package:ashur/screens/groupchat.dart';
-import 'package:ashur/secrets.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:share_plus/share_plus.dart';

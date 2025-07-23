@@ -95,15 +95,7 @@ class _StreaksStoreState extends State<StreaksStore> with SingleTickerProviderSt
   }
 
   Future<void> _loadChallenges() async {
-    setState(() {
-      // No specific loading needed here — handled by FutureBuilder in UI
-    });
-  }
-
-  Future<void> _claimChallenge(String type) async {
-    if (_uid == null) return;
-    final userRef = FirebaseDatabase.instance.ref('users/$_uid');
-        // Removed — all claiming now done directly in FutureBuilder + challenges tab UI
+    setState(() {});
   }
 
   @override
@@ -225,17 +217,6 @@ class _StreaksStoreState extends State<StreaksStore> with SingleTickerProviderSt
     return streak;
   }
 
-  Future<void> _spendStreaks(int amount) async {
-    if (_uid == null) return;
-    final spentRef = FirebaseDatabase.instance.ref('users/$_uid/spentStreaks');
-    final spentSnap = await spentRef.get();
-    int spent = 0;
-    if (spentSnap.exists && spentSnap.value != null) spent = (spentSnap.value as num).toInt();
-    spent += amount;
-    await spentRef.set(spent);
-    await _loadStreaks();
-  }
-
   Future<void> _loadStoreItems() async {
     setState(() { _storeLoading = true; });
     final ref = FirebaseDatabase.instance.ref('streaks_store/items');
@@ -254,16 +235,6 @@ class _StreaksStoreState extends State<StreaksStore> with SingleTickerProviderSt
       _storeLoading = false;
     });
     await _loadPurchased();
-  }
-
-  bool _isSubscriptionActive(Map<String, dynamic> item, Map<String, dynamic> userData) {
-    final userKey = item['userKey'] ?? item['id'];
-    if (!userData.containsKey(userKey)) return false;
-    final expiry = userData[userKey];
-    if (expiry is int) {
-      return DateTime.fromMillisecondsSinceEpoch(expiry).isAfter(_now ?? DateTime.now());
-    }
-    return false;
   }
 
   Future<void> _buyItem(Map<String, dynamic> item) async {
@@ -347,13 +318,6 @@ class _StreaksStoreState extends State<StreaksStore> with SingleTickerProviderSt
       await _loadPurchased();
     }
     await _loadStoreItems();
-  }
-
-  Future<bool> _userHasFlag(String key) async {
-    if (_uid == null) return false;
-    final userRef = FirebaseDatabase.instance.ref('users/$_uid/$key');
-    final snap = await userRef.get();
-    return snap.exists && snap.value == true;
   }
 
   String _formatExpiry(int expiry) {
@@ -535,7 +499,7 @@ class _StreaksStoreState extends State<StreaksStore> with SingleTickerProviderSt
         }
         setState(() { _redeemingPromo = false; });
         print('DEBUG: Promo code redeemed successfully');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('تم تفعيل الرمز وحصلت على المنتج!'), backgroundColor: Colors.green));
+        if (mounted) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('تم تفعيل الرمز وحصلت على المنتج!'), backgroundColor: Colors.green)); }
         await _loadPurchased();
         found = true;
         break;
@@ -546,7 +510,7 @@ class _StreaksStoreState extends State<StreaksStore> with SingleTickerProviderSt
     if (!found) {
       setState(() { _redeemingPromo = false; });
       print('DEBUG: No valid promo code found for input');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('رمز غير صالح أو منتهي'), backgroundColor: Colors.red));
+      if (mounted) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('رمز غير صالح أو منتهي'), backgroundColor: Colors.red)); }
     }
   }
 
@@ -998,11 +962,9 @@ class _StreaksStoreState extends State<StreaksStore> with SingleTickerProviderSt
                                     final reward = challenge['reward'] is int ? challenge['reward'] : 0;
                                     final itemId = challenge['item'];
                                     if (reward > 0) {
-                                      final userRef = FirebaseDatabase.instance.ref('users/$_uid');
-                                      final snap = await userRef.child('streaks').get();
-                                      int streaks = 0;
-                                      if (snap.exists && snap.value != null) streaks = (snap.value as num).toInt();
-                                      await userRef.update({'streaks': streaks + reward});
+                                      final spentRef = FirebaseDatabase.instance.ref('users/$_uid/spentStreaks');
+                                      final now = DateTime.now().millisecondsSinceEpoch;
+                                      await spentRef.push().set({'item': 'challenge_reward', 'cost': reward * -1, 'ts': now, 'challenge': key});
                                     }
                                     if (itemId != null && itemId is String && itemId.isNotEmpty) {
                                       final itemSnap = await FirebaseDatabase.instance.ref('streaks_store/items/$itemId').get();
@@ -1137,8 +1099,10 @@ class _AddProductPageState extends State<AddProductPage> {
     data.removeWhere((k, v) => v == null || (v is String && v.isEmpty));
     await newRef.set(data);
     setState(() { _saving = false; });
-    Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('تمت إضافة المنتج')));
+    if (mounted) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('تمت إضافة المنتج')));
+    }
   }
 
   Future<void> _addPromoCode() async {
