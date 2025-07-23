@@ -77,6 +77,7 @@ flutter:
     - images/
     - images/4x/
     - images/games/
+    - shorebird.yaml
   fonts:
     - family: 3rby
       fonts:
