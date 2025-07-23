@@ -61,7 +61,6 @@ class _foryouscreenState extends State<foryouscreen>
   String? username;
   late PageController _reelsPageController;
   late String userUID;
-  final Map<String, dynamic> _userCache = {};
   List<Map<String, dynamic>> _cachedPosts = [];
   bool _isLoadingPosts = false;
   late AnimationController _animationController;
@@ -374,7 +373,7 @@ class _foryouscreenState extends State<foryouscreen>
         (snapshot.value as Map<Object?, Object?>).forEach((key, value) {
           posts.add(Map<String, dynamic>.from(value as Map<Object?, Object?>));
         });
-        posts = _sortPostsByEngagement(posts);
+        posts = await _sortPostsByEngagement(posts);
         setState(() {
           _cachedPosts = posts;
           _isLoadingPosts = false;
@@ -392,38 +391,47 @@ class _foryouscreenState extends State<foryouscreen>
     }
   }
 
-  List<Map<String, dynamic>> _sortPostsByEngagement(List<Map<String, dynamic>> posts) {
+  Future<List<Map<String, dynamic>>> _sortPostsByEngagement(List<Map<String, dynamic>> posts) async {
     final now = DateTime.now();
     List<String> followedUsers = [];
     Map<String, int> followerCounts = {};
-    _userCache.forEach((uid, userData) {
-      if (userData != null && userData['followers'] != null) {
-        if (userData['followers'] is List) {
-          followerCounts[uid] = (userData['followers'] as List).length;
-        } else if (userData['followers'] is Map) {
-          followerCounts[uid] = (userData['followers'] as Map).length;
+
+    for (final post in posts) {
+      final userId = post['userEmail'] ?? '';
+      if (!followerCounts.containsKey(userId)) {
+        final userData = await _getUserData(userId);
+        int followersCount = 0;
+        if (userData != null && userData['followers'] != null) {
+          if (userData['followers'] is List) {
+            followersCount = (userData['followers'] as List).length;
+          } else if (userData['followers'] is Map) {
+            followersCount = (userData['followers'] as Map).length;
+          } else if (userData['followers'] is int) {
+            followersCount = userData['followers'];
+          }
         }
-      } else {
-        followerCounts[uid] = 0;
+        followerCounts[userId] = followersCount;
       }
-    });
+    }
+
     List<int> counts = followerCounts.values.toList()..sort((a, b) => b.compareTo(a));
     int threshold = counts.isNotEmpty ? counts[(counts.length * 0.1).floor().clamp(0, counts.length - 1)] : 0;
     Set<String> topUsers = followerCounts.entries
       .where((e) => e.value >= threshold && threshold > 0)
       .map((e) => e.key)
       .toSet();
-    if (_userCache.containsKey(userUID)) {
-      final userData = _userCache[userUID];
-      if (userData != null && userData['following'] != null) {
-        if (userData['following'] is List) {
-          followedUsers = List<String>.from(userData['following']);
-        } else if (userData['following'] is Map) {
-          followedUsers = (userData['following'] as Map).keys.map((e) => e.toString()).toList();
-        }
+
+    final currentUserData = await _getUserData(userUID);
+    if (currentUserData != null && currentUserData['following'] != null) {
+      if (currentUserData['following'] is List) {
+        followedUsers = List<String>.from(currentUserData['following']);
+      } else if (currentUserData['following'] is Map) {
+        followedUsers = (currentUserData['following'] as Map).keys.map((e) => e.toString()).toList();
       }
     }
-    List<Map<String, dynamic>> scoredPosts = posts.map((post) {
+
+    List<Map<String, dynamic>> scoredPosts = [];
+    for (final post in posts) {
       int likes = ((post['likes'] ?? 0) as num).toInt();
       int comments = 0;
       if (post['comments'] != null) {
@@ -451,19 +459,16 @@ class _foryouscreenState extends State<foryouscreen>
       double score = engagement * decay * recencyBoost * followBoost * topUserBoost * selfBoost;
       if (hours > 48 && engagement < 2) score *= 0.5;
       if (hours < 1) score += 1000;
-      return {
+      scoredPosts.add({
         ...post,
         '_engagementScore': score,
-      };
-    }).toList();
+      });
+    }
     scoredPosts.sort((a, b) => (b['_engagementScore'] as double).compareTo(a['_engagementScore'] as double));
     return scoredPosts;
   }
 
   Future<Map<String, dynamic>?> _getUserData(String userId) async {
-    if (_userCache.containsKey(userId)) {
-      return _userCache[userId];
-    }
     try {
       DatabaseEvent event = await FirebaseDatabase.instance
           .ref('users')
@@ -473,7 +478,6 @@ class _foryouscreenState extends State<foryouscreen>
         final value = event.snapshot.value;
         if (value is Map) {
           Map<String, dynamic> userData = Map<String, dynamic>.from(value as Map<Object?, Object?>);
-          _userCache[userId] = userData;
           return userData;
         }
       }
@@ -766,7 +770,7 @@ class _foryouscreenState extends State<foryouscreen>
                       value: 'ai',
                       child: ListTile(
                         leading: Icon(Icons.auto_awesome),
-                        title: Text('دردشة الذكاء الاصطناعي'),
+                        title: Text('Ashur AI'),
                       ),
                     ),
                     PopupMenuItem(
@@ -2870,14 +2874,14 @@ print('[DEBUG] Parsed profileTheme color for @${userSnapshot.data?['username']}:
                     ),
                     if (FirebaseAuth.instance.currentUser != null &&
                         (post['userEmail'] == FirebaseAuth.instance.currentUser!.uid ||
-                         (userSnapshot.data?['mod'] == true || (_userCache[FirebaseAuth.instance.currentUser!.uid]?['mod'] == true)))
+                         (userSnapshot.data?['mod'] == true))
                     ) ...[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           if (FirebaseAuth.instance.currentUser != null &&
                               (post['userEmail'] == FirebaseAuth.instance.currentUser!.uid ||
-                               (userSnapshot.data?['mod'] == true || (_userCache[FirebaseAuth.instance.currentUser!.uid]?['mod'] == true)))
+                               (userSnapshot.data?['mod'] == true))
                           )
                             PopupMenuButton<String>(
                               icon: Icon(Icons.more_vert, color: colorScheme.onSurfaceVariant),
@@ -4167,7 +4171,7 @@ print('[DEBUG] Parsed profileTheme color for @${userSnapshot.data?['username']}:
                                   SizedBox(width: 8),
                                   if (FirebaseAuth.instance.currentUser != null &&
                                       (post['userEmail'] == FirebaseAuth.instance.currentUser!.uid ||
-                                       (userSnapshot.data?['mod'] == true || (_userCache[FirebaseAuth.instance.currentUser!.uid]?['mod'] == true)))
+                                       (userSnapshot.data?['mod'] == true))
                                   )
                                     PopupMenuButton<String>(
                                       icon: Icon(Icons.more_vert, color: colorScheme.onSurfaceVariant),
@@ -5226,7 +5230,7 @@ print('[DEBUG] Parsed profileTheme color for @${userSnapshot.data?['username']}:
               Spacer(),
               if (FirebaseAuth.instance.currentUser != null &&
                   (post['userEmail'] == FirebaseAuth.instance.currentUser!.uid ||
-                   (userData['mod'] == true || (_userCache[FirebaseAuth.instance.currentUser!.uid]?['mod'] == true)))
+                   (userData['mod'] == true))
               ) ...[
                 IconButton(
                   icon: Icon(Icons.edit, color: colorScheme.primary),
