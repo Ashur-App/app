@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'dart:io' as io;
-import 'package:ashur/secrets.example.dart';
+import 'package:ashur/secrets.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ashur/storage.dart';
