@@ -2863,7 +2863,7 @@ print('[DEBUG] Parsed profileTheme color for @${userSnapshot.data?['username']}:
                                   ),
                                   onPressed: () {
                                     _updateShareCount(post);
-                                    Share.share('Check out this post on Ashur: ${post['desc']}\n${post['pic']}');
+                                    SharePlus.instance.share(ShareParams(text:'Check out this post on Ashur: ${post['desc']}\n${post['pic']}'));
                                   },
                                 ),
                               ),
@@ -4164,7 +4164,7 @@ print('[DEBUG] Parsed profileTheme color for @${userSnapshot.data?['username']}:
                                       ),
                                       onPressed: () {
                                         _updateShareCount(post);
-                                        Share.share('Check out this post on Ashur: ${post['desc']}${post['pic'] != null ? '\n${post['pic']}' : ''}');
+                                        SharePlus.instance.share(ShareParams(text:'Check out this post on Ashur: ${post['desc']}${post['pic'] != null ? '\n${post['pic']}' : ''}'));
                                       },
                                     ),
                                   ),
@@ -5223,7 +5223,7 @@ print('[DEBUG] Parsed profileTheme color for @${userSnapshot.data?['username']}:
                 icon: Icon(Icons.share_outlined, color: colorScheme.primary),
                 onPressed: () {
                   _updateShareCount(post);
-                  Share.share('Check out this post on Ashur: ${post['desc'] ?? ''}\n${post['pic'] ?? ''}');
+                  SharePlus.instance.share(ShareParams(text:'Check out this post on Ashur: ${post['desc'] ?? ''}\n${post['pic'] ?? ''}'));
                 },
               ),
               Text('${((post['shares'] ?? 0) as num).toInt()}'),
