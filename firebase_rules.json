@@ -4,6 +4,7 @@
       ".indexOn": "owner"
     },
       "feedback": {".read": "true", ".write": "true"},
+        "reports": {".read": "true", ".write": "true"},
     "users": {
   "$uid": {
     ".write": "!data.exists() && auth !== null && auth.uid === $uid",
