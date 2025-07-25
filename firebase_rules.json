@@ -1,0 +1,211 @@
+{
+  "rules": {
+    "bots": {
+      ".indexOn": "owner"
+    },
+      "feedback": {".read": "true", ".write": "true"},
+    "users": {
+  "$uid": {
+    ".write": "!data.exists() && auth !== null && auth.uid === $uid",
+    "$followerUid": {
+          ".write": "auth !== null &&
+                     auth.uid === $followerUid && 
+                     newData.isString() && newData.val() === 'follow' &&
+                     (!root.child('users').child(auth.uid).child('banned').exists() || 
+                      root.child('users').child(auth.uid).child('banned').val() === false)",
+
+          ".validate": "newData.isString() && newData.val() === 'follow'"
+        },
+    "username": {
+      ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      ".write": "!data.exists() && newData.isString() && auth.uid === $uid && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)"
+    },
+      "bio": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false) && $uid === auth.uid)"
+      },
+        "pic": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false) && $uid === auth.uid)"
+      },
+        "email": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false) && $uid === auth.uid)"
+      },
+        "followers": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "fcmToken": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false) && $uid === auth.uid)"
+      },
+        "id": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false) && $uid === auth.uid)"
+      },
+        "name": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false) && $uid === auth.uid)"
+      },
+        "updated_at": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false) && $uid === auth.uid)"
+      },
+        "verify": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false) && $uid === auth.uid)"
+      },
+        "mod": {
+        ".write": "false"
+      },
+        "contributor": {
+        ".write": "false"
+      },
+        "team": {
+        ".write": "false"
+      },
+        "challenges": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false) && $uid === auth.uid)"
+      },
+        "canEditProfileColor": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "verifyExpiry": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "stories": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "spentStreaks": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "streaks": {
+          ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+        },
+        "private": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "profileTheme": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "profileThemeColor": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "hasProfileAnalytics": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "highlights": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "coverPhoto": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+        "canEditProfileBanner": {
+        ".write": "(auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false))"
+      },
+    ".read": "auth !== null && (!data.child('banned').exists() || data.child('banned').val() === false)",
+},
+  ".indexOn": "username",
+  ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)"
+},
+
+    "chats": {
+      ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      ".write": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)"
+    },
+    "challenges": {
+      ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      ".write": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)"
+    },
+    "comments": {
+      ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      ".write": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)"
+    },
+      "groups": {
+      ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      ".write": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)"
+    },
+    "notifications": {
+      ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      ".write": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)"
+    },
+    "reels_comments": {
+      ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      ".write": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)"
+    },
+    "streaks_store": {
+      ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      ".write": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)"
+    },
+    ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      "posts": {
+        "$post": {
+          "userActions": {
+      ".write": "auth !== null &&
+                 (!root.child('users').child(auth.uid).child('banned').exists() ||
+                  root.child('users').child(auth.uid).child('banned').val() === false)",
+          },
+            "shares": {
+      ".write": "auth !== null &&
+                 (!root.child('users').child(auth.uid).child('banned').exists() ||
+                  root.child('users').child(auth.uid).child('banned').val() === false)",
+          },
+          ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+             ".write": "auth !== null &&
+               root.child('users').child(auth.uid).child('banned').val() !== true &&
+               (
+                 root.child('users').child(auth.uid).child('mod').val() === true ||
+                 (
+                   !data.exists() && newData.child('userEmail').val() === auth.uid
+                 ) ||
+                 (
+                   data.exists() && newData.exists() &&
+                   data.child('userEmail').val() === auth.uid &&
+                   newData.child('userEmail').val() === data.child('userEmail').val()
+                 ) ||
+                 (
+                   data.exists() && !newData.exists() &&
+                   data.child('userEmail').val() === auth.uid
+                 )
+               )"
+        },
+        ".indexOn": "userEmail",
+        ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      },
+        "reels": {
+        "$post": {
+          "userActions": {
+      ".write": "auth !== null &&
+                 (!root.child('users').child(auth.uid).child('banned').exists() ||
+                  root.child('users').child(auth.uid).child('banned').val() === false)",
+          },
+            "shares": {
+      ".write": "auth !== null &&
+                 (!root.child('users').child(auth.uid).child('banned').exists() ||
+                  root.child('users').child(auth.uid).child('banned').val() === false)",
+          },
+            "watchTime": {
+      ".write": "auth !== null &&
+                 (!root.child('users').child(auth.uid).child('banned').exists() ||
+                  root.child('users').child(auth.uid).child('banned').val() === false)",
+          },
+            "views": {
+      ".write": "auth !== null &&
+                 (!root.child('users').child(auth.uid).child('banned').exists() ||
+                  root.child('users').child(auth.uid).child('banned').val() === false)",
+          },
+          ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+             ".write": "auth !== null &&
+               root.child('users').child(auth.uid).child('banned').val() !== true &&
+               (
+                 root.child('users').child(auth.uid).child('mod').val() === true ||
+                 (
+                   !data.exists() && newData.child('uid').val() === auth.uid
+                 ) ||
+                 (
+                   data.exists() && newData.exists() &&
+                   data.child('uid').val() === auth.uid &&
+                   newData.child('uid').val() === data.child('uid').val()
+                 ) ||
+                 (
+                   data.exists() && !newData.exists() &&
+                   data.child('uid').val() === auth.uid
+                 )
+               )"
+        },
+        ".read": "auth !== null && (!root.child('users').child(auth.uid).child('banned').exists() || root.child('users').child(auth.uid).child('banned').val() === false)",
+      }
+  }
+}
